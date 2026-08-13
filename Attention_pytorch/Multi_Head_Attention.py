@@ -32,13 +32,13 @@ class MultiHeadAttention(nn.Module):
         V = V.transpose(-2, -3)
         # The Scissors (Attention)
         # we get exact order (Batch , Humber of heads, d_in(sequence),d_out(dimention))
-        attention_score = Q @ K.transpose(-1,-2)
+        attention_score = Q @ K.transpose(-1,-2)    # (B,H,T,D)@(B,H,D,T) 
         scale = self.head_dim ** 0.5
         attention_scores = attention_score / scale
         # Softmax across the last dimension (the T dimension)
         Attention_weights = F.softmax(attention_scores, dim=-1)
         Context = Attention_weights @ V
-        # STEP 5: The Glue (Put it back together)
+        # The Glue (Put it back together)
         # Move Heads back to the middle: (B, Heads, T, Dim) -> (B, T, Heads, Dim)
         context_matrix = Context.transpose(-2, -3)
 
